@@ -7,10 +7,11 @@ async function fetchTasks() {
     const response = await fetch('/api/tasks');
     const tasks = await response.json();
 
-    taskTable.innerHTML = '';  // Czyścimy tabelę
+    taskTable.innerHTML = '';  // Czyścimy tabelę przed renderowaniem
+
     tasks.forEach(task => {
         const row = document.createElement('tr');
-        row.classList.toggle('completed', task.completed);  // Jeśli zrobione, to dodaj klasę "completed"
+        row.classList.toggle('completed', task.completed);  // Dodaj klasę, jeśli zadanie jest zrobione
 
         const taskCell = document.createElement('td');
         taskCell.textContent = task.task;
@@ -44,17 +45,17 @@ taskForm.addEventListener('submit', async (e) => {
     const taskValue = taskInput.value;
 
     if (taskValue) {
-        // Wysłanie żądania POST do serwera
+        // Wyślij zapytanie POST do serwera
         await fetch('/api/tasks', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task: taskValue })
         });
 
-        // Wyczyść pole input
-        taskInput.value = '';
-
-        // Odśwież listę zadań
-        fetchTasks();  // Sprawdź, czy ta funkcja jest poprawnie wywoływana
+        taskInput.value = '';  // Wyczyść pole input
+        fetchTasks();  // Odśwież listę zadań
     }
 });
+
+// Pobierz zadania na start
+fetchTasks();
